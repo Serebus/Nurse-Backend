@@ -1,6 +1,0 @@
-@Nurse_Backend_HostAddress = http://localhost:5082
-
-GET {{Nurse_Backend_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

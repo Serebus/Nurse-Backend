@@ -1,4 +1,6 @@
+using Nurse_Backend.Data;
 using Scalar.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddDbContext<NurseDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NurseRecording")));
 
 var app = builder.Build();
 

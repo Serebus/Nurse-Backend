@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
@@ -23,13 +24,23 @@ namespace Nurse_Backend.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserDto request)
+        public async Task<ActionResult<TokenResponseDto>> Login(UserDto request)
         {
-            var token = await authService.LoginAsync(request);
-            if (token is null)
+            var result = await authService.LoginAsync(request);
+            if (result is null)
                 return BadRequest("username or password is incorrect");
 
-            return Ok(token);
+            return Ok(result);
+        }
+
+
+        [Authorize(Roles  = "Admin")]
+        [HttpGet("Admin")]
+        public IActionResult Admin()
+        {
+            
+            
+            return Ok("Welcome Admin");
         }
 
 

@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Nurse_Backend.Services.Implementation;
 
 public class AuthService(NurseDbContext context, IConfiguration configuration) : IAuthService
 {
-    public async Task<string?> LoginAsync(UserDto request)
+    public async Task<TokenResponseDto?> LoginAsync(UserDto request)
     {
         var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
         if (user is null)
@@ -26,7 +27,14 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
         {
             return null;
         }
-        return CreateToken(user);
+
+        var response = new TokenResponseDto
+        {
+            AccessToken = CreateToken(user),
+            RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+        };
+        
+        return response;
     }
 
     public async Task<User?> RegisterAsync(UserDto request)
@@ -49,6 +57,23 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
         
         return user;
     }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
+    private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
+    {
+        var refreshToken = GenerateRefreshToken();
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpires = DateTime.UtcNow.AddDays(7);
+        await context.SaveChangesAsync();
+        return refreshToken;
+    }
     
     private string CreateToken(User user)
     {
@@ -56,6 +81,7 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Roles)
         };
 
         var key = new SymmetricSecurityKey(

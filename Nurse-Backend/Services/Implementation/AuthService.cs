@@ -28,13 +28,25 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
             return null;
         }
 
-        var response = new TokenResponseDto
+        return await CreateTokenResponse(user);
+    }
+
+    private async Task<TokenResponseDto> CreateTokenResponse(User user)
+    {
+        return new TokenResponseDto
         {
             AccessToken = CreateToken(user),
             RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
         };
+    }
+
+    public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
+    {
+        var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+        if (user is null)
+            return null;
         
-        return response;
+        return await CreateTokenResponse(user);
     }
 
     public async Task<User?> RegisterAsync(UserDto request)
@@ -57,6 +69,18 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
         
         return user;
     }
+
+    private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
+    {
+        var user = await context.Users.FindAsync(userId);
+        if (user is null || user.RefreshToken != refreshToken 
+                         || user.RefreshTokenExpires < DateTime.UtcNow)
+        {
+            return null;
+        }
+        return user;
+    }
+    
 
     private string GenerateRefreshToken()
     {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
+using Nurse_Backend.Models.Dto.TokenDtos;
 using Nurse_Backend.Services.Interface;
 
 
@@ -15,7 +16,7 @@ namespace Nurse_Backend.Controllers
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(RegisterDto request)
         {
             var user = await authService.RegisterAsync(request);
             if  (user is null)

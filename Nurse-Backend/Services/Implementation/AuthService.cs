@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Nurse_Backend.Data;
 using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
+using Nurse_Backend.Models.Dto.TokenDtos;
 using Nurse_Backend.Services.Interface;
 
 namespace Nurse_Backend.Services.Implementation;
@@ -60,7 +61,7 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
         }
     }
 
-    public async Task<User?> RegisterAsync(UserDto request)
+    public async Task<User?> RegisterAsync(RegisterDto request)
     {
         if (await context.Users.AnyAsync(u => u.Username == request.Username))
         {
@@ -74,6 +75,7 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
             
         user.Username = request.Username;
         user.PasswordHash =  hashedPassword;
+        user.Roles = request.Roles;
             
         context.Users.Add(user);
         await context.SaveChangesAsync();

@@ -1,4 +1,4 @@
-namespace Nurse_Backend.Models.Dto;
+namespace Nurse_Backend.Models.Dto.TokenDtos;
 
 public class TokenResponseDto
 {

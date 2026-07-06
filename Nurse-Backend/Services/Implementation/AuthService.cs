@@ -97,7 +97,7 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
 
     private string GenerateRefreshToken()
     {
-        var randomNumber = new byte[32];
+        var randomNumber = new byte[16];
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);

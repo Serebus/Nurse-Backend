@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nurse_Backend.Entities;
@@ -51,6 +52,19 @@ namespace Nurse_Backend.Controllers
                 return Unauthorized("Invalid refresh token");
             return Ok(result);
         }
+        
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId is null)
+                return Unauthorized();
+
+            await authService.LogoutAsync(Guid.Parse(userId));
+            return Ok("Logged out successfully");
+        }
+        
         
     }
 }

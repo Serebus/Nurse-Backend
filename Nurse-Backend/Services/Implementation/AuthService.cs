@@ -49,6 +49,17 @@ public class AuthService(NurseDbContext context, IConfiguration configuration) :
         return await CreateTokenResponse(user);
     }
 
+    public async Task LogoutAsync(Guid userId)
+    {
+        var user = await context.Users.FindAsync(userId);
+        if (user != null)
+        {
+            user.RefreshToken = null;
+            user.RefreshTokenExpires = DateTime.MinValue;
+            await context.SaveChangesAsync();
+        }
+    }
+
     public async Task<User?> RegisterAsync(UserDto request)
     {
         if (await context.Users.AnyAsync(u => u.Username == request.Username))

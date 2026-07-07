@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
 using Nurse_Backend.Models.Dto.TokenDtos;
-using Nurse_Backend.Services.Interface;
+using Nurse_Backend.Services.Authservice;
+
 
 
 namespace Nurse_Backend.Controllers

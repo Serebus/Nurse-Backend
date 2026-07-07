@@ -2,7 +2,7 @@ using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
 using Nurse_Backend.Models.Dto.TokenDtos;
 
-namespace Nurse_Backend.Services.Interface;
+namespace Nurse_Backend.Services.Authservice;
 
 public interface IAuthService
 {

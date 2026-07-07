@@ -9,9 +9,9 @@ using Nurse_Backend.Data;
 using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
 using Nurse_Backend.Models.Dto.TokenDtos;
-using Nurse_Backend.Services.Interface;
+using Nurse_Backend.Services.Authservice;
 
-namespace Nurse_Backend.Services.Implementation;
+namespace Nurse_Backend.Services.Authservice;
 
 public class AuthService(NurseDbContext context, IConfiguration configuration) : IAuthService
 {

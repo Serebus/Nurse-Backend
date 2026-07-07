@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Nurse_Backend.Models.Dto;
+namespace Nurse_Backend.Models.Dto.AuthDto;
 
 public class RegisterDto : UserDto
 {

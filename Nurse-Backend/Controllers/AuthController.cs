@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nurse_Backend.Entities;
 using Nurse_Backend.Models.Dto;
+using Nurse_Backend.Models.Dto.AuthDto;
 using Nurse_Backend.Models.Dto.TokenDtos;
 using Nurse_Backend.Services.Authservice;
 
